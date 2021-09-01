@@ -169,10 +169,11 @@ impl ResolvesServerCert for CertResolver {
                         e
                     })
                     .ok()?;
-                if peer_id == PeerId::from_signer(&self.signer) {
+                let signer_peer_id = PeerId::from_signer(&self.signer);
+                if peer_id == signer_peer_id {
                     self.certified_key(client_hello.sigschemes())
                 } else {
-                    tracing::warn!("sni doesn't match local peer id");
+                    tracing::warn!("sni doesn't match local peer id: sni {} vs signer {}", peer_id, signer_peer_id);
                     None
                 }
             })

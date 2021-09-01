@@ -187,6 +187,12 @@ impl broadcast::LocalStorage<SocketAddr> for Storage {
 
         let (provider, addr_hints) = provider.into();
 
+        {
+            let p: &str = &provider.default_encoding();
+            let m: &str = &has.urn.encode_id();
+            crate::usdt::radicle_link::have_recv(p.as_ptr() as *mut _, m.as_ptr() as *mut _);
+        }
+
         // If the `has` doesn't tell us to look into a specific remote-tracking
         // branch, assume we want the `provider`'s.
         let origin = has.origin.unwrap_or(provider);
@@ -258,6 +264,12 @@ impl broadcast::LocalStorage<SocketAddr> for Storage {
 
     #[tracing::instrument(level = "debug", skip(self))]
     async fn ask(&self, want: Self::Update) -> bool {
+        {
+            let p: &str = &want.origin.map_or_else(|| "unknown".to_owned(), |o| o.default_encoding());
+            let m: &str = &want.urn.encode_id();
+            crate::usdt::radicle_link::want_recv(p.as_ptr() as *mut _, m.as_ptr() as *mut _);
+        }
+
         self.git_has(
             match want.origin {
                 Some(origin) => Right(Originates {

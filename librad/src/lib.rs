@@ -18,6 +18,10 @@
 #![feature(try_trait_v2)]
 #![feature(control_flow_enum)]
 
+pub mod usdt {
+    include!(env!("SONDE_RUST_API_FILE"));
+}
+
 #[macro_use]
 extern crate async_trait;
 #[macro_use]
